@@ -4,6 +4,7 @@ import Link from 'next/link';
 import CyberBorder from './CyberBorder';
 import ShuffleText from './ShuffleText';
 import GlitchText from './GlitchText';
+import Image from 'next/image';
 
 const experiences = [
   {
@@ -42,10 +43,12 @@ const ExperienceShowcase: React.FC<ExperienceShowcaseProps> = () => {
     <section id="experiences" className="py-16 md:py-32 bg-background-dark relative border-t border-white/5 overflow-hidden">
       {/* Backdrop Arena Image */}
       <div className="absolute inset-0 z-0">
-        <img 
+        <Image 
           src="/media/arcade/interior-starship.jpeg"
           alt="Cypherzone Interior" 
           className="w-full h-full object-cover grayscale opacity-[0.05] contrast-150"
+          width={1920}
+          height={1080}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background-dark via-transparent to-background-dark opacity-90"></div>
       </div>
@@ -74,9 +77,11 @@ const ExperienceShowcase: React.FC<ExperienceShowcaseProps> = () => {
             <div key={exp.title} className="group cursor-crosshair">
               <CyberBorder className="bg-slate-900/50 overflow-hidden backdrop-blur-sm">
                 <div className="relative aspect-video overflow-hidden">
-                  <img 
+                  <Image 
                     src={exp.image} 
                     alt={exp.title}
+                    width={1920}
+                    height={1080}
                     className="w-full h-full object-cover opacity-100 transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>

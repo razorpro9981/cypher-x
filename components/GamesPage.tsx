@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import CyberBorder from './CyberBorder';
 import ShuffleText from './ShuffleText';
 import GlitchText from './GlitchText';
+import Image from 'next/image';
 
 interface Game {
   id: string;
@@ -175,9 +176,11 @@ const GamesPage: React.FC = () => {
                 <div className="flex flex-col h-full">
                   {/* Image Container */}
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img 
+                    <Image 
                       src={game.image} 
                       alt={game.title} 
+                      width={1920}
+                      height={1080}
                       className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>

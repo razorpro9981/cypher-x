@@ -3,6 +3,7 @@ import React from 'react';
 import CyberBorder from './CyberBorder';
 import ShuffleText from './ShuffleText';
 import GlitchText from './GlitchText';
+import Image from 'next/image';
 
 const arcadeImages = [
   {
@@ -71,9 +72,11 @@ const ArcadeGallery: React.FC = () => {
                     <div className="absolute top-0 left-0 w-full h-[2px] bg-primary/40 shadow-[0_0_15px_#00f3ff] animate-[scanLine_3s_linear_infinite]"></div>
                   </div>
 
-                  <img 
+                  <Image 
                     src={img.src} 
                     alt={img.title} 
+                    width={1920}
+                    height={1080}
                     className="w-full h-full object-cover brightness-90 contrast-110 group-hover:brightness-100 group-hover:scale-110 transition-all duration-[1.5s]"
                   />
 

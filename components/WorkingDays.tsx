@@ -2,6 +2,7 @@
 import React from 'react';
 import CyberBorder from './CyberBorder';
 import ShuffleText from './ShuffleText';
+import Image from 'next/image';
 
 const WorkingDays: React.FC = () => {
   const schedule = [
@@ -23,9 +24,11 @@ const WorkingDays: React.FC = () => {
     <section id="hours" className="py-16 md:py-32 bg-background-dark relative overflow-hidden border-t border-white/5">
       {/* Hardware / Circuitry Background Layer */}
       <div className="absolute inset-0 z-0">
-        <img 
+        <Image 
           src="/media/arcade/interior-simulator.jpeg"
           alt="Cypherzone Interior" 
+          width={1920}
+          height={1080}
           className="w-full h-full object-cover grayscale opacity-[0.06] brightness-50 contrast-125"
         />
         <div className="absolute inset-0 bg-background-dark/80"></div>

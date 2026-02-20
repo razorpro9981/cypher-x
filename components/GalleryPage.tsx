@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import CyberBorder from './CyberBorder';
 import ShuffleText from './ShuffleText';
 import GlitchText from './GlitchText';
+import Image from 'next/image';
 
 interface GalleryItem {
   id: string;
@@ -96,9 +97,11 @@ const GalleryPage: React.FC = () => {
                   {/* Shimmer loading effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
-                  <img 
+                  <Image 
                     src={item.src} 
                     alt={item.title} 
+                    width={1920}
+                    height={1080}
                     className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000"
                   />
 
