@@ -145,30 +145,37 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       className="fixed inset-0 z-[100] bg-background-dark flex items-center justify-center font-pixel overflow-hidden perspective-[1500px] cursor-none"
     >
       {/* Dynamic Laser Reticle */}
-      <div 
+      <div
         className="fixed pointer-events-none z-[500] mix-blend-screen"
-        style={{ left: rawMousePos.x, top: rawMousePos.y, transform: 'translate(-50%, -50%)' }}
+        style={{
+          left: rawMousePos.x,
+          top: rawMousePos.y,
+          transform: "translate(-50%, -50%)",
+        }}
       >
         <div className="relative w-16 h-16 flex items-center justify-center">
-            <div className="absolute inset-0 border border-primary/30 rounded-full animate-ping"></div>
-            <div className="absolute inset-2 border border-secondary/20 rounded-full"></div>
-            <div className="w-8 h-[1px] bg-primary shadow-[0_0_8px_#00f3ff]"></div>
-            <div className="h-8 w-[1px] bg-primary absolute shadow-[0_0_8px_#00f3ff]"></div>
-            <div className="absolute top-[-25px] left-1/2 -translate-x-1/2 text-[7px] text-primary whitespace-nowrap tracking-[0.4em] font-black uppercase">
-                {phase === 1 ? `LINKING_NODE: ${syncProgress}%` : ''}
-            </div>
+          <div className="absolute inset-0 border border-primary/30 rounded-full animate-ping"></div>
+          <div className="absolute inset-2 border border-secondary/20 rounded-full"></div>
+          <div className="w-8 h-[1px] bg-primary shadow-[0_0_8px_#00f3ff]"></div>
+          <div className="h-8 w-[1px] bg-primary absolute shadow-[0_0_8px_#00f3ff]"></div>
+          <div className="absolute top-[-25px] left-1/2 -translate-x-1/2 text-[7px] text-primary whitespace-nowrap tracking-[0.4em] font-black uppercase">
+            {phase === 1 ? `LINKING_NODE: ${syncProgress}%` : ""}
+          </div>
         </div>
       </div>
 
       {/* Grid Background */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className="absolute inset-0 bg-grid-pattern animate-[tunnel_12s_linear_infinite]" style={{ transform: 'rotateX(80deg)' }}></div>
+        <div
+          className="absolute inset-0 bg-grid-pattern animate-[tunnel_12s_linear_infinite]"
+          style={{ transform: "rotateX(80deg)" }}
+        ></div>
       </div>
 
       <div className="relative z-[110] w-full max-w-4xl px-10 flex flex-col items-center">
@@ -176,14 +183,24 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
         {phase === 0 && (
           <div className="text-left w-full max-w-sm p-8 bg-black/60 border border-primary/20 backdrop-blur-md shadow-[0_0_30px_rgba(0,243,255,0.1)]">
             <div className="mb-6">
-                <div className="text-primary font-display font-black text-2xl tracking-tighter mb-1 uppercase italic flex items-center gap-2">
-                    <span className="w-3 h-3 bg-primary animate-pulse"></span>
-                    Cypher <span className="text-secondary">Zone</span> X_OS
-                </div>
-                <div className="text-[6px] text-slate-500 tracking-[0.8em]">INIT_VERSION_4.2.1_STABLE</div>
+              <div className="text-primary font-display font-black text-2xl tracking-tighter mb-1 uppercase italic flex items-center gap-2">
+                <span className="font-display font-black text-lg md:text-xl tracking-tighter text-primary leading-none">
+                  CYPHER
+                  <span className="text-pink-400  group-hover:neon-glow-cyan transition-all">
+                    ZONE
+                  </span>
+                  <span className="text-yellow-500">X_OS</span>
+                </span>
+              </div>
+              <div className="text-[6px] text-slate-500 tracking-[0.8em]">
+                INIT_VERSION_4.2.1_STABLE
+              </div>
             </div>
             {logs.map((log, i) => (
-              <div key={i} className="text-primary text-[10px] md:text-xs mb-1.5 opacity-80 flex gap-2">
+              <div
+                key={i}
+                className="text-primary text-[10px] md:text-xs mb-1.5 opacity-80 flex gap-2"
+              >
                 <span className="text-secondary">#</span> {log}
               </div>
             ))}
@@ -202,18 +219,20 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
               <div className="absolute inset-[-9%] border border-primary/20 rounded-full opacity-40 animate-ping"></div>
 
               <div className="relative text-center flex flex-col items-center gap-3 z-[2]">
-              
-                <div className="text-[9px] text-primary tracking-[0.6em] font-black uppercase opacity-60">Neural_Synchronization</div>
+                <div className="text-[9px] text-primary tracking-[0.6em] font-black uppercase opacity-60">
+                  Neural_Synchronization
+                </div>
                 <div className="text-7xl md:text-8xl font-display font-black text-white drop-shadow-[0_0_40px_rgba(0,243,255,0.8)]">
-                  {syncProgress}<span className="text-2xl text-primary opacity-40">%</span>
+                  {syncProgress}
+                  <span className="text-2xl text-primary opacity-40">%</span>
                 </div>
                 <div className="mt-4 flex justify-center gap-1.5">
-                   {[...Array(12)].map((_, i) => (
-                     <div 
-                      key={i} 
-                      className={`w-2 h-5 transition-all duration-300 ${i < (syncProgress / 8.3) ? 'bg-primary shadow-[0_0_12px_#00f3ff]' : 'bg-white/5'}`}
-                     ></div>
-                   ))}
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-2 h-5 transition-all duration-300 ${i < syncProgress / 8.3 ? "bg-primary shadow-[0_0_12px_#00f3ff]" : "bg-white/5"}`}
+                    ></div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -221,14 +240,39 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
             {/* Tactical Readouts */}
             <div className="hud-element grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-2xl px-4">
               {[
-                { label: 'UPLINK_STABILITY', val: syncProgress > 50 ? 'STABLE' : 'BUFFERING', color: 'text-primary' },
-                { label: 'NEURAL_INTEGRITY', val: '99.99%', color: 'text-green-500' },
-                { label: 'EYE_TRACKING', val: 'LOCKED', color: 'text-secondary' },
-                { label: 'REALITY_PHASE', val: syncProgress > 80 ? 'DESYNC_READY' : 'WAITING', color: 'text-white' }
-              ].map(stat => (
-                <div key={stat.label} className="p-4 bg-black/40 border border-white/5 backdrop-blur-md flex flex-col items-center">
-                   <div className="text-[6px] text-slate-500 mb-1.5 tracking-widest uppercase">{stat.label}</div>
-                   <div className={`text-[8px] font-black uppercase tracking-wider ${stat.color}`}>{stat.val}</div>
+                {
+                  label: "UPLINK_STABILITY",
+                  val: syncProgress > 50 ? "STABLE" : "BUFFERING",
+                  color: "text-primary",
+                },
+                {
+                  label: "NEURAL_INTEGRITY",
+                  val: "99.99%",
+                  color: "text-green-500",
+                },
+                {
+                  label: "EYE_TRACKING",
+                  val: "LOCKED",
+                  color: "text-secondary",
+                },
+                {
+                  label: "REALITY_PHASE",
+                  val: syncProgress > 80 ? "DESYNC_READY" : "WAITING",
+                  color: "text-white",
+                },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="p-4 bg-black/40 border border-white/5 backdrop-blur-md flex flex-col items-center"
+                >
+                  <div className="text-[6px] text-slate-500 mb-1.5 tracking-widest uppercase">
+                    {stat.label}
+                  </div>
+                  <div
+                    className={`text-[8px] font-black uppercase tracking-wider ${stat.color}`}
+                  >
+                    {stat.val}
+                  </div>
                 </div>
               ))}
             </div>
@@ -238,7 +282,10 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
         {/* Phase 2: Logo Spotlight */}
         {phase === 2 && (
           <div className="sync-visual flex flex-col items-center justify-center gap-10 w-full preserve-3d">
-            <div ref={logoRef} className="relative flex items-center justify-center">
+            <div
+              ref={logoRef}
+              className="relative flex items-center justify-center"
+            >
               <div className="absolute inset-[-45%] bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.6),transparent_72%)] blur-3xl"></div>
               <div className="absolute inset-[-35%] bg-[conic-gradient(from_0deg,rgba(0,0,0,0.7),rgba(0,243,255,0.18),rgba(0,0,0,0.7))] blur-lg animate-[spin_12s_linear_infinite]"></div>
               <div className="absolute inset-[-15%] "></div>
@@ -262,7 +309,7 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
         {/* Phase 2: Flash Transition */}
         {phase === 3 && (
           <div className="fixed inset-0 bg-white flex items-center justify-center z-[200]">
-             <div className="w-full h-[3px] bg-primary animate-[scan_0.3s_linear_infinite]"></div>
+            <div className="w-full h-[3px] bg-primary animate-[scan_0.3s_linear_infinite]"></div>
           </div>
         )}
       </div>

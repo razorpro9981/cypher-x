@@ -30,7 +30,7 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick, setActiveTab }) => {
                   height={500}
                   width={500}
                   className="object-contain mt-2"
-                  priority={false}
+                  priority
                 />
               </div>
               <div className="flex flex-col">
