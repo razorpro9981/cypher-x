@@ -1,9 +1,9 @@
 {
   "name": "CypherzoneX VR Universe",
   "description": "A futuristic, high-performance VR arcade landing page featuring glitch aesthetics, neon effects",
-  "icon": "/logo-black.png",
-  "appleIcon": "/logo-black.png",
-  "image": "/logo-black.jpg",
+  "icon": "/icon.png",
+  "appleIcon": "/apple-icon.png",
+  "image": "/media/vrboy.jpg",
   "siteUrl": "https://cypherzonex.com",
   "keywords": [
     "VR arcade",
