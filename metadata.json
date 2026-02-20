@@ -1,0 +1,33 @@
+{
+  "name": "CypherzoneX VR Universe",
+  "description": "A futuristic, high-performance VR arcade landing page featuring glitch aesthetics, neon effects",
+  "icon": "/logo-black.png",
+  "appleIcon": "/logo-black.png",
+  "image": "/logo-black.jpg",
+  "siteUrl": "https://cypherzonex.com",
+  "keywords": [
+    "VR arcade",
+    "cyberpunk",
+    "neural sync",
+    "accra gaming",
+    "virtual reality"
+  ],
+  "twitter": {
+    "handle": "@cypherzone_x",
+    "card": "summary_large_image"
+  },
+  "instagram": {
+    "handle": "@cypherzone_x"
+  },
+  "tiktok": {
+    "handle": "@cypherzone_x"
+  },
+  "themeColor": "#00f3ff",
+  "robots": "index, follow",
+  "locale": "en-US",
+  "version": "1.0.0",
+  "author": "Cypherzone X Team",
+  "repository": {
+    "type": "git"
+  }
+}

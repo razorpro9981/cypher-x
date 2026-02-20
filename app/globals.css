@@ -1,26 +1,230 @@
 @import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@300;400;500;600;700&display=swap'); */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0f;
+  --foreground: #e2e8f0;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: #00f3ff;
+  --color-secondary: #ff00ff;
+  --color-brand-yellow: #f4ff52;
+  --color-background-light: #f1f5f9;
+  --color-background-dark: #0a0a0f;
+  --color-accent: #7000ff;
+  --font-display: "Orbitron", sans-serif;
+  --font-body: "Rajdhani", sans-serif;
+  --font-pixel: "Press Start 2P", cursive;
+  --font-arcade: "Press Start 2P", cursive;
+  --radius-default: 4px;
+  --background-image-grid-pattern: linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px);
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  @keyframes glitch {
+    0% { clip-path: inset(80% 0 0 0); }
+    10% { clip-path: inset(10% 0 85% 0); }
+    20% { clip-path: inset(80% 0 20% 0); }
+    30% { clip-path: inset(10% 0 50% 0); }
+    40% { clip-path: inset(50% 0 30% 0); }
+    50% { clip-path: inset(30% 0 70% 0); }
+    60% { clip-path: inset(70% 0 10% 0); }
+    70% { clip-path: inset(0% 0 0% 0); }
+    80% { clip-path: inset(15% 0 80% 0); }
+    90% { clip-path: inset(80% 0 15% 0); }
+    100% { clip-path: inset(10% 0 85% 0); }
+  }
+  @keyframes scanLine {
+    0% { top: 0%; }
+    100% { top: 100%; }
+  }
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(40px); }
+  }
+  @keyframes beamMove {
+    0% { transform: rotateX(60deg) translateY(0); }
+    100% { transform: rotateX(60deg) translateY(2000px); }
+  }
+
+  --animate-shimmer: shimmer 2s infinite linear;
+  --animate-glitch: glitch 2s infinite linear;
+  --animate-scanLine: scanLine 4s linear infinite;
+  --animate-gridMove: gridMove 1s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0a0a0f;
+    --foreground: #e2e8f0;
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
+  background: var(--color-background-dark);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Rajdhani", sans-serif;
+  cursor: none;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: #0a0a0f;
+}
+
+.neon-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5);
+}
+
+.neon-glow-magenta {
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.7), 0 0 20px rgba(255, 0, 255, 0.5);
+}
+
+.retro-arcade-title {
+  background: linear-gradient(to bottom, #ffffff 20%, #ff00ff 45%, #00f3ff 50%, #00f3ff 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px rgba(0, 243, 255, 0.8));
+  display: inline-block;
+}
+
+.title-glitch-layer {
+  position: relative;
+}
+
+.title-glitch-layer::before,
+.title-glitch-layer::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.title-glitch-layer::before {
+  left: 2px;
+  text-shadow: -2px 0 #ff00ff;
+  clip: rect(44px, 9999px, 56px, 0);
+  animation: glitch 5s infinite linear alternate-reverse;
+  opacity: 0.6;
+}
+
+.title-glitch-layer::after {
+  left: -2px;
+  text-shadow: 2px 0 #00f3ff;
+  clip: rect(12px, 9999px, 30px, 0);
+  animation: glitch 3s infinite linear alternate-reverse;
+  opacity: 0.6;
+}
+
+/* 3D Grid Scan Styles */
+.grid-scan-container {
+  perspective: 800px;
+  overflow: hidden;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.grid-scan-lines {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  left: -50%;
+  top: -50%;
+  transform: rotateX(60deg);
+  background-image: linear-gradient(to right, rgba(0, 243, 255, 0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 243, 255, 0.2) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridMove 2s linear infinite;
+}
+
+.grid-scan-beam {
+  position: absolute;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 243, 255, 0.2), transparent);
+  top: -200px;
+  transform: rotateX(60deg);
+  animation: beamMove 4s ease-in-out infinite;
+  filter: blur(10px);
+}
+
+.grid-fade-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, #0a0a0f 85%);
+  pointer-events: none;
+}
+
+.custom-cursor {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #00f3ff;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-cursor::before {
+  width: 1px;
+  height: 10px;
+  content: '';
+  position: absolute;
+  background: #ff00ff;
+}
+
+.custom-cursor::after {
+  width: 10px;
+  height: 1px;
+  content: '';
+  position: absolute;
+  background: #ff00ff;
+}
+
+.scan-line-element {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, transparent, #00f3ff, transparent);
+  box-shadow: 0 0 15px #00f3ff;
+  opacity: 0.3;
+  animation: scanLine 4s linear infinite;
+}
+
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  color: rgba(255, 255, 255, 0.08);
+}
+
+.light-mode-grid {
+  color: rgba(15, 23, 42, 0.1);
+}
+
+.animate-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.prefers-reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }
