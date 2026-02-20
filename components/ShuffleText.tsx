@@ -19,10 +19,11 @@ const ShuffleText: React.FC<ShuffleTextProps> = ({ text, className = "", delay =
   useEffect(() => {
     let iteration = 0;
     let timeout: any;
+    let interval: any;
     setIsFinished(false);
 
     const startShuffle = () => {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         setDisplayText(
           text
             .split("")
@@ -47,6 +48,7 @@ const ShuffleText: React.FC<ShuffleTextProps> = ({ text, className = "", delay =
     timeout = setTimeout(startShuffle, delay);
     return () => {
       clearTimeout(timeout);
+      clearInterval(interval);
       setDisplayText("");
     };
   }, [text, delay]);

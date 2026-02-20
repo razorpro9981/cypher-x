@@ -9,57 +9,30 @@ import Link from 'next/link';
 import CyberBorder from './CyberBorder';
 import ShuffleText from './ShuffleText';
 import GlitchText from './GlitchText';
+import { NewsItem, STORAGE_KEY, defaultSiteData, mergeSiteData } from '@/lib/siteData';
 
 interface NewsSectionProps {
   onNavigate?: (tab: string) => void;
 }
 
-interface NewsItem {
-  id: string;
-  date: string;
-  category: 'SYSTEM_UPDATE' | 'EVENT' | 'INTEL';
-  title: string;
-  excerpt: string;
-  content: string;
-  image: string;
-}
-
-const newsData: NewsItem[] = [
-  {
-    id: '1',
-    date: '2026.02.14',
-    category: 'EVENT',
-    title: "VALENTINE'S DAY SPECIALS",
-    excerpt: '5 exclusive couples packages! From ₵350 First Date Reloaded to ₵850 Double Date Chaos. VR experiences + dining combos for 2-4 people.',
-    content: 'Celebrate love at Cypherzone with five curated combos. First Date Reloaded (₵350) includes 1 VR game + 2 mains + fries + 2 drinks. Love & Adrenaline (₵450) adds a combo platter. Escape Reality (₵550) pairs Flying Ride + VR 360 with mozzarella sticks, burgers, and ice cream. Forever Mode (₵750) grants any 3 VR games plus chicken tenders, jollof & fried chicken, and drinks. Double Date Chaos (₵850 for 4) stacks Flying Ride, Battle Cage, Flying Car, 7D Cinema with pizzas, broasted chicken, ice creams, and drinks. Call +233 26 011 6116 to book.',
-    image: '/media/vals.png'
-  },
-  {
-    id: '2',
-    date: '2026.02.10',
-    category: 'SYSTEM_UPDATE',
-    title: '9 VR GAMES NOW LIVE',
-    excerpt: 'Full game lineup active: VR 360, Flying Ride, Speed Rider, Speed Racer, Gun Fight Hero, 7D Cinema and more.',
-    content: 'All nine VR stations are active. Pricing per person: Speed Rider ₵40, Gun Fight Hero ₵40, Race Simulator ₵40, VR 360 ₵55, Take Off Now ₵55, Battle Cage ₵45, Flying Ride ₵55, 4x4 Adventures ₵45, Cinema 7D ₵90. Sessions average 15–20 minutes; credits never expire.',
-    image: '/media/games/7.png'
-  },
-  {
-    id: '3',
-    date: '2026.02.01',
-    category: 'INTEL',
-    title: 'NEON BITES MENU UPDATE',
-    excerpt: 'Full restaurant menu now available. Burgers, pizza, shawarma, broasted chicken, shisha and more. Fuel your gaming sessions.',
-    content: 'Neon Bites kitchen is fully online with 13 categories: starters from ₵40, burgers from ₵115, pizzas from ₵100, mains, sandwiches, pasta & noodles, salads, breakfast, cakes/pastries, hot and cold drinks, shakes, and shisha. Freshly prepared daily inside Cypherzone HQ.',
-    image: '/media/arcade/exterior-front.jpeg'
-  }
-];
-
 const NewsSection: React.FC<NewsSectionProps> = () => {
+  const [news, setNews] = useState<NewsItem[]>(defaultSiteData.news);
   const [activeLog, setActiveLog] = useState<NewsItem | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    try {
+      const parsed = mergeSiteData(JSON.parse(saved));
+      setNews(parsed.news);
+    } catch (e) {
+      console.error('Failed to parse saved news config', e);
+    }
   }, []);
 
   useEffect(() => {
@@ -72,7 +45,7 @@ const NewsSection: React.FC<NewsSectionProps> = () => {
   }, [activeLog]);
 
   function goToNews() {
-    <Link href="/news" />;
+    window.location.href = '/news';
   }
 
   return (
@@ -98,7 +71,7 @@ const NewsSection: React.FC<NewsSectionProps> = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {newsData.map((item) => (
+          {news.slice(0, 3).map((item) => (
                 <CyberBorder key={item.id} className="bg-black/40 backdrop-blur-sm group hover:bg-black/60 transition-all duration-500">
                   <button
                     type="button"

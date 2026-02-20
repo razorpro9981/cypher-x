@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
-import siteMeta from "../metadata.json";
+import siteMeta from "../../metadata.json";
 
 export const metadata: Metadata = {
   title: siteMeta.name,

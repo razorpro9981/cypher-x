@@ -30,20 +30,42 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
   ];
 
   useEffect(() => {
-    // Phase 0: System Boot Logs (Untouched per user request)
+    // Phase 0: System Boot Logs (with fail-safe start)
     let logIndex = 0;
-    const logInterval = setInterval(() => {
+    let logInterval: NodeJS.Timeout | null = null;
+    let failSafe: NodeJS.Timeout | null = null;
+
+    setPhase(0);
+    setLogs([]);
+
+    const kickToPhaseOne = () => setPhase((prev) => (prev < 1 ? 1 : prev));
+
+    logInterval = setInterval(() => {
       if (logIndex < bootLogs.length) {
-        setLogs(prev => [...prev.slice(-5), bootLogs[logIndex]]);
+        setLogs((prev) => [...prev.slice(-5), bootLogs[logIndex]]);
         logIndex++;
-      } else {
+      } else if (logInterval) {
         clearInterval(logInterval);
-        setTimeout(() => setPhase(1), 800);
+        logInterval = null;
+        setTimeout(kickToPhaseOne, 800);
       }
     }, 120);
 
-    return () => clearInterval(logInterval);
+    // Fail-safe: if for any reason logs stall, advance after a short window
+    failSafe = setTimeout(kickToPhaseOne, bootLogs.length * 150 + 1500);
+
+    return () => {
+      if (logInterval) clearInterval(logInterval);
+      if (failSafe) clearTimeout(failSafe);
+    };
   }, []);
+
+  // Secondary fail-safe: if phase stays at 0 too long, advance
+  useEffect(() => {
+    if (phase !== 0) return;
+    const nudge = setTimeout(() => setPhase((p) => (p === 0 ? 1 : p)), 4500);
+    return () => clearTimeout(nudge);
+  }, [phase]);
 
   useEffect(() => {
     if (phase === 1) {

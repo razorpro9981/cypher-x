@@ -1,141 +1,38 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CyberBorder from "@/components/CyberBorder";
 import ShuffleText from "@/components/ShuffleText";
 import GlitchText from "@/components/GlitchText";
 import Image from "next/image";
-
-interface Game {
-  id: string;
-  title: string;
-  category: "ACTION" | "HORROR" | "RHYTHM" | "SIM";
-  players: string;
-  intensity: "LOW" | "MED" | "HIGH" | "MAX";
-  image: string;
-  description: string;
-  syncLevel: string;
-  price: string;
-}
-
-const gamesData: Game[] = [
-  {
-    id: "g1",
-    title: "VR_360",
-    category: "SIM",
-    players: "1-4",
-    intensity: "HIGH",
-    image: "/media/games/1.png",
-    description:
-      "Full 360-degree immersive VR experience. Rotate, spin, and dive into virtual worlds.",
-    syncLevel: "98%",
-    price: "55",
-  },
-  {
-    id: "g2",
-    title: "FLYING_RIDE",
-    category: "SIM",
-    players: "1-2",
-    intensity: "HIGH",
-    image: "/media/games/2.png",
-    description:
-      "Soar through breathtaking aerial landscapes in a fully enclosed flight simulator.",
-    syncLevel: "99%",
-    price: "55",
-  },
-  {
-    id: "g3",
-    title: "SPEED_RIDER",
-    category: "ACTION",
-    players: "1",
-    intensity: "MAX",
-    image: "/media/games/3.png",
-    description:
-      "High-speed motorcycle racing through neon-lit cyberpunk cityscapes. Feel every turn.",
-    syncLevel: "97%",
-    price: "40",
-  },
-  {
-    id: "g4",
-    title: "TAKE_OFF_NOW",
-    category: "SIM",
-    players: "1-4",
-    intensity: "MED",
-    image: "/media/games/4.png",
-    description:
-      "Free-roam VR adventure with full-body tracking. Walk, run, and explore virtual dimensions.",
-    syncLevel: "94%",
-    price: "55",
-  },
-  {
-    id: "g5",
-    title: "FLYING_CAR",
-    category: "ACTION",
-    players: "1-4",
-    intensity: "HIGH",
-    image: "/media/games/5.png",
-    description:
-      "Multi-seat flying vehicle simulator. Navigate aerial combat zones with your squad.",
-    syncLevel: "95%",
-    price: "45",
-  },
-  {
-    id: "g6",
-    title: "7D_CINEMA",
-    category: "SIM",
-    players: "2-8",
-    intensity: "MED",
-    image: "/media/games/6.png",
-    description:
-      "Next-gen cinematic experience with motion seats, wind, and sensory effects.",
-    syncLevel: "100%",
-    price: "90",
-  },
-  {
-    id: "g7",
-    title: "SPEED_RACER",
-    category: "ACTION",
-    players: "1",
-    intensity: "MAX",
-    image: "/media/games/7.png",
-    description:
-      "Professional racing simulator with full cockpit controls. G-force feedback enabled.",
-    syncLevel: "96%",
-    price: "40",
-  },
-  {
-    id: "g8",
-    title: "GUN_FIGHT_HERO",
-    category: "ACTION",
-    players: "1-2",
-    intensity: "HIGH",
-    image: "/media/games/8.png",
-    description:
-      "Arcade-style shooting experience. Test your aim and reflexes in intense combat scenarios.",
-    syncLevel: "92%",
-    price: "40",
-  },
-  {
-    id: "g9",
-    title: "PLAYSTATION_ZONE",
-    category: "SIM",
-    players: "1-4",
-    intensity: "LOW",
-    image: "/media/games/9.png",
-    description:
-      "Premium gaming lounge with latest PlayStation consoles and racing sim setups.",
-    syncLevel: "100%",
-    price: "40",
-  },
-];
+import { Game, STORAGE_KEY, defaultSiteData, mergeSiteData } from "@/lib/siteData";
 
 const GamesPage: React.FC = () => {
   const [filter, setFilter] = useState<string>("ALL");
+  const [games, setGames] = useState<Game[]>(defaultSiteData.games);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    try {
+      const parsed = mergeSiteData(JSON.parse(saved));
+      setGames(parsed.games);
+    } catch (e) {
+      console.error("Failed to parse saved games config", e);
+    }
+  }, []);
 
   const filteredGames =
     filter === "ALL"
-      ? gamesData
-      : gamesData.filter((g) => g.category === filter);
+      ? games
+      : games.filter((g) => g.category === filter);
+
+  const prices = games.map((g) => Number(g.price) || 0).filter((n) => !Number.isNaN(n));
+  const priceRange =
+    prices.length > 0
+      ? `₵${Math.min(...prices)}-₵${Math.max(...prices)}`
+      : "N/A";
 
   return (
     <main className="relative pt-32 pb-20 min-h-screen bg-background-dark overflow-hidden">
@@ -278,8 +175,8 @@ const GamesPage: React.FC = () => {
         <div className="mt-12 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {[
             { label: "PRICING", value: "PER PERSON" },
-            { label: "TOTAL_GAMES", value: "9" },
-            { label: "PRICE_RANGE", value: "₵40-₵90" },
+            { label: "TOTAL_GAMES", value: games.length.toString() },
+            { label: "PRICE_RANGE", value: priceRange },
             { label: "LOCATION", value: "SECTOR_7G" },
           ].map((stat) => (
             <div

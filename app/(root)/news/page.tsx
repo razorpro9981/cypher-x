@@ -8,100 +8,27 @@ import Image from "next/image";
 import CyberBorder from "@/components/CyberBorder";
 import ShuffleText from "@/components/ShuffleText";
 import GlitchText from "@/components/GlitchText";
-
-interface NewsItem {
-  id: string;
-  date: string;
-  category: "SYSTEM_UPDATE" | "EVENT" | "INTEL" | "CLASSIFIED";
-  title: string;
-  excerpt: string;
-  content: string;
-  image: string;
-  clearance: "LEVEL_1" | "LEVEL_2" | "LEVEL_3" | "OVERRIDE";
-}
-
-const newsData: NewsItem[] = [
-  {
-    id: "1",
-    date: "2026.02.14",
-    category: "EVENT",
-    title: "VALENTINE'S DAY SPECIALS",
-    excerpt:
-      "5 exclusive couples packages from ₵350 to ₵850. VR experiences + dining combos for 2-4 people.",
-    content:
-      "Celebrate love at Cypherzone! Package 1: First Date Reloaded (₵350) - 1 VR game + 2 Burgers/Pizza + Fries + 2 Soft Drinks. Package 2: Love & Adrenaline (₵450) - 2 VR games + Combo Platter + Pizza + 2 Drinks. Package 3: Escape Reality (₵550) - Flying Ride + VR 360 + Mozzarella Sticks + 2 Burgers + 2 Ice Creams. Package 4: Forever Mode (₵750) - Any 3 VR games + Chicken Tenders + Jollof & Fried Chicken + 2 Drinks. Package 5: Double Date Chaos (₵850 for 4 people) - Flying Ride + Battle Cage + Flying Car + 7D Cinema + 2 Pizzas + 4 Pcs Broasted Chicken + 4 Ice Creams + 4 Drinks. Call +233 26 011 6116 to book!",
-    image: "/media/vals.png",
-    clearance: "LEVEL_1",
-  },
-  {
-    id: "2",
-    date: "2026.02.10",
-    category: "SYSTEM_UPDATE",
-    title: "9 VR EXPERIENCES NOW LIVE",
-    excerpt:
-      "Full game lineup deployed. Speed Rider, VR 360, Flying Ride, 7D Cinema, Speed Racer and more.",
-    content:
-      "All 9 VR stations are now fully operational. Prices range from ₵40 to ₵90 per person per game. Speed Rider (₵40), Gun Fight Hero (₵40), Race Simulator (₵40), VR 360 (₵55), Take Off Now (₵55), Battle Cage (₵45 each), Flying Ride (₵55), 4x4 Adventures (₵45), Cinema 7D (₵90).",
-    image: "/media/games/7.png",
-    clearance: "LEVEL_1",
-  },
-  {
-    id: "3",
-    date: "2026.02.05",
-    category: "INTEL",
-    title: "NEON_BITES FULL MENU",
-    excerpt:
-      "Complete restaurant menu now serving. Burgers, pizza, shawarma, broasted chicken, shisha and more.",
-    content:
-      "Our Neon Bites kitchen is fully operational with 13 menu categories. Starters from ₵40, Burgers from ₵115, Pizza from ₵100, Main Course dishes, Sandwiches, Pasta & Noodles, Salads, Breakfast, Cakes & Pastries, Hot Drinks, Cold Drinks, Shakes, and Shisha. All freshly prepared daily at Cypherzone HQ.",
-    image: "/media/arcade/exterior-front.jpeg",
-    clearance: "LEVEL_1",
-  },
-  {
-    id: "4",
-    date: "2026.02.01",
-    category: "SYSTEM_UPDATE",
-    title: "BATTLE_CAGE ACTIVATED",
-    excerpt:
-      "The Starship Troopers VR combat arena is now open. Gear up and go to war.",
-    content:
-      "Our indoor combat zone featuring the Starship Troopers experience is now fully online. ₵45 per person. Full-body immersion with squad-based gameplay. Walk-ins welcome.",
-    image: "/media/arcade/interior-starship.jpeg",
-    clearance: "LEVEL_2",
-  },
-  {
-    id: "5",
-    date: "2026.01.20",
-    category: "INTEL",
-    title: "PLAYSTATION_ZONE OPEN",
-    excerpt:
-      "Premium gaming lounge with the latest PlayStation consoles and racing sim setups.",
-    content:
-      "Relax in our dedicated PlayStation Zone. Multiple stations with the latest consoles, racing simulators, and comfortable seating. Perfect for casual gaming between VR sessions.",
-    image: "/media/games/9.png",
-    clearance: "LEVEL_1",
-  },
-  {
-    id: "6",
-    date: "2026.01.15",
-    category: "EVENT",
-    title: "GRAND OPENING",
-    excerpt:
-      "Cypherzone VR Universe is officially open in Ghana. Redefine your reality.",
-    content:
-      "We are proud to announce the grand opening of Cypherzone VR Universe - Ghana's premier VR entertainment destination. Featuring 9 immersive VR experiences, a full-service restaurant, and a premium gaming lounge. Visit us today!",
-    image: "/media/arcade/exterior-side.jpeg",
-    clearance: "LEVEL_1",
-  },
-];
+import { NewsItem, STORAGE_KEY, defaultSiteData, mergeSiteData } from "@/lib/siteData";
 
 const NewsPage: React.FC = () => {
   const [filter, setFilter] = useState<string>("ALL");
+  const [news, setNews] = useState<NewsItem[]>(defaultSiteData.news);
   const [activeLog, setActiveLog] = useState<NewsItem | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const scrollPosition = React.useRef(0);
 
   useEffect(() => setIsMounted(true), []);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    try {
+      const parsed = mergeSiteData(JSON.parse(saved));
+      setNews(parsed.news);
+    } catch (e) {
+      console.error("Failed to parse saved news config", e);
+    }
+  }, []);
 
   useEffect(() => {
     if (!activeLog) return;
@@ -123,8 +50,10 @@ const NewsPage: React.FC = () => {
 
   const filteredNews =
     filter === "ALL"
-      ? newsData
-      : newsData.filter((item) => item.category === filter);
+      ? news
+      : news.filter((item) => item.category === filter);
+
+  const featured = news[0];
 
   return (
     <main className="relative pt-32 pb-20 min-h-screen bg-background-light dark:bg-background-dark overflow-hidden transition-colors">
@@ -169,13 +98,13 @@ const NewsPage: React.FC = () => {
         </div>
 
         {/* Featured News Hero */}
-        {filter === "ALL" && (
+        {filter === "ALL" && featured && (
           <div className="mb-12 group cursor-pointer">
             <CyberBorder className="bg-white dark:bg-black/40 border-slate-200 dark:border-white/5 overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 <div className="relative h-[300px] lg:h-full overflow-hidden bg-slate-900">
                   <Image
-                    src={newsData[0].image}
+                    src={featured.image}
                     fill
                     className="object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-1000 grayscale group-hover:grayscale-0"
                     alt="Featured Event"
@@ -187,23 +116,23 @@ const NewsPage: React.FC = () => {
                       FEATURED_EVENT
                     </span>
                     <span className="px-3 py-1 bg-black/80 text-primary border border-primary/30 font-pixel text-[8px] uppercase">
-                      {newsData[0].category}
+                      {featured.category}
                     </span>
                   </div>
                 </div>
                 <div className="p-10 flex flex-col justify-center space-y-6">
                   <div className="text-[10px] font-pixel text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                    [SOURCE_DECRYPT_ID: {newsData[0].date}]
+                    [SOURCE_DECRYPT_ID: {featured.date}]
                   </div>
                   <h2 className="text-3xl md:text-5xl font-display font-black text-slate-900 dark:text-white tracking-tighter leading-none group-hover:text-secondary transition-colors">
-                    {newsData[0].title}
+                    {featured.title}
                   </h2>
                   <p className="text-slate-600 dark:text-slate-400 font-body text-lg leading-relaxed">
-                    {newsData[0].excerpt}
+                    {featured.excerpt}
                   </p>
                   <div className="pt-4">
                     <button
-                      onClick={() => setActiveLog(newsData[0])}
+                      onClick={() => setActiveLog(featured)}
                       className="flex items-center gap-4 text-[10px] font-pixel text-secondary group-hover:translate-x-4 transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                     >
                       ACCESS_FULL_LOG <span className="text-lg">→</span>

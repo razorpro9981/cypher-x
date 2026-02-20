@@ -1,198 +1,26 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import CyberBorder from "@/components/CyberBorder";
 import ShuffleText from "@/components/ShuffleText";
 import GlitchText from "@/components/GlitchText";
-
-interface MenuCategory {
-  name: string;
-  items: { name: string; price: string; note?: string }[];
-}
-
-const menuCategories: MenuCategory[] = [
-  {
-    name: "STARTERS",
-    items: [
-      { name: "Mac & Cheese", price: "80" },
-      { name: "Chicken Wings", price: "80" },
-      { name: "Chicken Tenders", price: "90", note: "Plain, BBQ, Buffalo" },
-      { name: "Loaded Fries", price: "120" },
-      { name: "Fried Plantain (Kelewele)", price: "40" },
-      { name: "Mozzarella Sticks 6pcs", price: "90" },
-      { name: "Shrimp Dynamite", price: "120" },
-      { name: "Loaded Nachos", price: "105" },
-      { name: "Sliders", price: "85", note: "3 Mini Burgers" },
-      {
-        name: "Combo Platter (Sharing)",
-        price: "215",
-        note: "Wings, Tenders, Mozzarella, Kelewele, Shrimps, Fries",
-      },
-    ],
-  },
-  {
-    name: "BURGERS",
-    items: [
-      { name: "Classic Burger", price: "115" },
-      { name: "Grill'd Chicken Burger", price: "130", note: "Buffalo Dipped" },
-      { name: "Southern Fried Chicken", price: "140" },
-      { name: "Mushroom Burger", price: "140" },
-      { name: "BBQ Burger", price: "145" },
-      { name: "Smashed Burger", price: "125" },
-      { name: "Waffle Burger", price: "135" },
-    ],
-  },
-  {
-    name: "PIZZA",
-    items: [
-      { name: "Margherita", price: "100" },
-      { name: "Pepperoni", price: "130" },
-      { name: "Spicy Chicken", price: "130" },
-      { name: "Vegetarian", price: "120" },
-      { name: "Chicken Mushroom", price: "110" },
-    ],
-  },
-  {
-    name: "MAIN_COURSE",
-    items: [
-      { name: "4 Pcs Broasted Chicken", price: "63" },
-      { name: "6 Pcs Broasted Chicken", price: "88" },
-      { name: "9 Pcs Broasted Chicken", price: "123" },
-      { name: "12 Pcs Broasted Chicken", price: "175" },
-      { name: "Roasted Chicken (Full)", price: "200" },
-      { name: "Half Roasted Chicken", price: "105" },
-      { name: "Jollof & Fried Fish Fillet", price: "120" },
-      { name: "Jollof & Fried Chicken", price: "100" },
-      { name: "Waakye", price: "95" },
-      { name: "Tilapia with Jollof", price: "150" },
-      { name: "Mix Grilled Platter", price: "170" },
-      { name: "Sweet & Sour Chicken", price: "110" },
-      { name: "Stir Fry Beef", price: "150" },
-    ],
-  },
-  {
-    name: "SANDWICHES",
-    items: [
-      { name: "Philly Steak", price: "85" },
-      { name: "Chicken Shawarma", price: "80" },
-      { name: "Beef Shawarma", price: "80" },
-      { name: "Tawouk Sandwich", price: "80" },
-      { name: "Chicken Fajita Sandwich", price: "95" },
-      { name: "Classic Falafel", price: "65" },
-      { name: "Hot Dogs (Texas)", price: "65" },
-    ],
-  },
-  {
-    name: "PASTA__NOODLES",
-    items: [
-      { name: "Spaghetti Bolognese", price: "120" },
-      { name: "Fettucini Alfredo", price: "130" },
-      { name: "Penne Arabiatta", price: "90" },
-      { name: "Spicy Beef Noodles", price: "90" },
-      { name: "Spicy Chicken Noodles", price: "90" },
-      { name: "Vegetable Noodles", price: "90" },
-    ],
-  },
-  {
-    name: "SALAD",
-    items: [
-      { name: "Pasta Salad", price: "120" },
-      { name: "Greek Salad", price: "105" },
-      { name: "Chicken Caesar", price: "100" },
-      { name: "Tuna Pasta Salad", price: "100" },
-      { name: "Kale Fattoush Salad", price: "100" },
-    ],
-  },
-  {
-    name: "SIDERS",
-    items: [
-      { name: "Fries", price: "50" },
-      { name: "Shrimps Fried Rice", price: "100" },
-      { name: "Beef Fried Rice", price: "100" },
-      { name: "Chicken Fried Rice", price: "80" },
-      { name: "Grill'd Chicken Breast", price: "40" },
-      { name: "Jollof Rice", price: "45" },
-      { name: "Steamed Rice", price: "25" },
-      { name: "Side Salad", price: "35" },
-      { name: "Extra Eggs 3 Pcs", price: "25" },
-      { name: "Sauces", price: "5" },
-      { name: "Extra Cheese", price: "15" },
-    ],
-  },
-  {
-    name: "BREAKFAST",
-    items: [
-      { name: "Cheese & Vegetable Omelette", price: "60" },
-      { name: "Turkey & Cheese", price: "85" },
-      { name: "Spicy Cheese", price: "75" },
-      { name: "Zaatar & Cheese", price: "75" },
-      { name: "Sausage & Eggs", price: "70" },
-      {
-        name: "Croissant",
-        price: "45",
-        note: "Plain 30 GHC / Cheese, Thyme, Chocolate",
-      },
-      { name: "Waffles", price: "75" },
-      { name: "Pancakes", price: "75" },
-    ],
-  },
-  {
-    name: "CAKES__PASTRIES",
-    items: [
-      { name: "Cheese Cake Cups", price: "55" },
-      { name: "San Sebastian", price: "55" },
-      { name: "Cupcakes", price: "35" },
-      { name: "Tiramisu Cups", price: "55" },
-      { name: "Brownies", price: "65" },
-      { name: "Muffins", price: "35" },
-      { name: "Donuts", price: "25" },
-    ],
-  },
-  {
-    name: "HOT_DRINKS",
-    items: [
-      { name: "Tea", price: "30" },
-      { name: "Espresso", price: "30" },
-      { name: "Double Espresso", price: "45" },
-      { name: "Cappuccino", price: "50" },
-      { name: "Latte", price: "55" },
-      { name: "American Coffee", price: "40" },
-    ],
-  },
-  {
-    name: "DRINKS",
-    items: [
-      {
-        name: "Slushie",
-        price: "35",
-        note: "Lemon, Mix Fruits, Mango, Pineapple, Tangerine",
-      },
-      { name: "Vanilla Shake", price: "65" },
-      { name: "Strawberry Shake", price: "65" },
-      { name: "Chocolate Shake", price: "65" },
-      { name: "Oreo Shake", price: "65" },
-      { name: "Soft Drinks", price: "15" },
-      { name: "Water", price: "10" },
-      { name: "Ice Cream (Gelato) Per Scoop", price: "25" },
-      { name: "Ice Cream Cone", price: "25" },
-      { name: "Cotton Candy", price: "15" },
-    ],
-  },
-  {
-    name: "SHISHA",
-    items: [
-      { name: "Gum & Mint", price: "100" },
-      { name: "Lemon & Mint", price: "100" },
-      { name: "Mint", price: "100" },
-      { name: "Love", price: "105" },
-      { name: "Apple", price: "105" },
-      { name: "Blueberry", price: "105" },
-    ],
-  },
-];
+import { MenuCategory, STORAGE_KEY, defaultSiteData, mergeSiteData } from "@/lib/siteData";
 
 const RestaurantPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>("ALL");
+  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>(defaultSiteData.menu);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    try {
+      const parsed = mergeSiteData(JSON.parse(saved));
+      setMenuCategories(parsed.menu);
+    } catch (e) {
+      console.error("Failed to parse saved menu config", e);
+    }
+  }, []);
   const categoryImages: Record<string, string> = {
     STARTERS: "/media/food/chicken.jpg",
     BURGERS: "/media/food/burgers.jpg",
