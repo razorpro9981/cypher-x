@@ -134,7 +134,7 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick, setActiveTab }) => {
                 Accra, Ghana
               </p>
               <Link
-                href="https://maps.google.com/?q=Cypherzone+VR+Spintex"
+                href="https://maps.google.com/?q=CypherzoneX"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-secondary text-xs cursor-pointer hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
